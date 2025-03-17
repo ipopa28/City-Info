@@ -1,3 +1,4 @@
+using CityInfo.API;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
@@ -46,7 +47,12 @@ builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
                  subsequent request will use the same instance 
 e.g. Our mailservice = lightweight & stateless
      After switching to Entity Framework Core, scoped lifetimes will be used for context and repository */
-builder.Services.AddTransient<LocalMailService>();
+#if DEBUG
+builder.Services.AddTransient<IMailService, LocalMailService>();
+#else
+builder.Services.AddTransient<IMailService, CloudMailService>();
+#endif
+builder.Services.AddTransient<CitiesDataStore>();
 
 var app = builder.Build();
 
