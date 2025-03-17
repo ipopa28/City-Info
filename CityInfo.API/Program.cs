@@ -1,3 +1,4 @@
+using CityInfo.API.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 
@@ -36,6 +37,16 @@ builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+/* Methods for registering your own service:
+ *AddTransient - Transient lifetime services are created each time they are requested. Works best for lightweight,
+                 stateless services.
+ *AddScope - Scoped lifetime services are created once per request
+ *AddSingleton - Singleton lifetime services are created the first time they are requested, every 
+                 subsequent request will use the same instance 
+e.g. Our mailservice = lightweight & stateless
+     After switching to Entity Framework Core, scoped lifetimes will be used for context and repository */
+builder.Services.AddTransient<LocalMailService>();
 
 var app = builder.Build();
 
